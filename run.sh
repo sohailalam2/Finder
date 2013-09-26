@@ -1,7 +1,7 @@
 #!/bin/sh
 ### ==============================================================================###
 ##                                                                                 ##
-##              Http Server And Proxy Bootstrap Script for Linux based OS's        ##
+##                       Keyword Finder Script for Linux based OS's                ##
 ##                                                                                 ##
 ### ==============================================================================###
 
@@ -58,9 +58,6 @@ if [ "$linux" = "true" ]; then
       JAVA_OPTS="$JAVA_OPTS -XX:CMSInitiatingOccupancyFraction=75"
       JAVA_OPTS="$JAVA_OPTS -XX:+UseCMSInitiatingOccupancyOnly"
       JAVA_OPTS="$JAVA_OPTS -XX:-HeapDumpOnOutOfMemoryError"
-      JAVA_OPTS="$JAVA_OPTS -XX:HeapDumpPath=/root/sohail/vv-sms/dump.hprof"
-      JAVA_OPTS="$JAVA_OPTS -Dio.netty.allocator.numDirectArenas=16"
-      JAVA_OPTS="$JAVA_OPTS -Dio.netty.noResourceLeakDetection=true"
 fi
 
 # For Cygwin, ensure paths are in UNIX format before anything is touched
@@ -99,11 +96,11 @@ if [ "x$JAVA" = "x" ]; then
 fi
 
 # Setup the classpath
-Http_Server_Proxy="./http_server_proxy.jar"
-if [ ! -f "$Http_Server_Proxy" ]; then
-    die "Missing required file: $Http_Server_Proxy"
+Keyword_Finder="./keyword_finder.jar"
+if [ ! -f "$Keyword_Finder" ]; then
+    die "Missing required file: $Keyword_Finder"
 fi
-AS_BOOT_CLASSPATH="$Http_Server_Proxy"
+AS_BOOT_CLASSPATH="$Keyword_Finder"
 
 # Only include tools.jar if someone wants to use the JDK instead.
 # compatible distribution which JAVA_HOME points to
@@ -165,15 +162,15 @@ while true; do
       # Execute the JVM in the foreground
       "$JAVA" $JAVA_OPTS \
          -classpath "$AS_CLASSPATH" \
-         com.sohail.alam.http.server.HttpServerBootstrap"$@"
+         com.sohail.alam.keywordfinder.KeywordFinder"$@"
       AS_STATUS=$?
    else
       # Execute the JVM in the background
       "$JAVA" $JAVA_OPTS \
          -classpath "$AS_CLASSPATH" \
-        com.sohail.alam.http.server.HttpServerBootstrap&
+        com.sohail.alam.keywordfinder.KeywordFinder&
       AS_PID=$!
-      # Trap common signals and relay them to the  Http Server And Proxy process
+      # Trap common signals and relay them to the  Keyword Finder process
       trap "kill -HUP  $AS_PID" HUP
       trap "kill -TERM $AS_PID" INT
       trap "kill -QUIT $AS_PID" QUIT
@@ -187,7 +184,7 @@ while true; do
          if [ "${WAIT_STATUS}" -gt 128 ]; then
             SIGNAL=`expr ${WAIT_STATUS} - 128`
             SIGNAL_NAME=`kill -l ${SIGNAL}`
-            echo "***  Http Server And Proxy process (${AS_PID}) received ${SIGNAL_NAME} signal ***" >&2
+            echo "***  Keyword Finder process (${AS_PID}) received ${SIGNAL_NAME} signal ***" >&2
          fi          
       done
       if [ "${WAIT_STATUS}" -lt 127 ]; then
@@ -198,7 +195,7 @@ while true; do
    fi
    
    if [ "$AS_STATUS" -eq 10 ]; then
-      echo "Restarting Http Server And Proxy..."
+      echo "Restarting Keyword Finder..."
    else
       exit $AS_STATUS
    fi

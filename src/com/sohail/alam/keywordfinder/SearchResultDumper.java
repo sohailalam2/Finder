@@ -35,8 +35,14 @@ public class SearchResultDumper {
     private FileOutputStream searchResultOut;
 
     private SearchResultDumper() {
-        SEARCH_RESULT_FILE = new File("Search_Result_"
-                + new SimpleDateFormat("yyyy.MM.dd_HH.mm.ss.SSS").format(new Date()) + ".txt");
+        // Create the Search_Results directory if not exists
+        File resultsDir = new File("./Search_Result");
+        if (!resultsDir.exists()) {
+            resultsDir.mkdirs();
+        }
+        String currentDate = new SimpleDateFormat("yyyy.MM.dd_HH.mm.ss.SSS").format(new Date());
+        SEARCH_RESULT_FILE
+                = new File(resultsDir.getAbsoluteFile() + "/" + currentDate + ".txt");
         try {
             searchResultOut = new FileOutputStream(SEARCH_RESULT_FILE);
         } catch (FileNotFoundException e) {

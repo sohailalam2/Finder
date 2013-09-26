@@ -22,6 +22,12 @@
         <deltree dir="${basedir}/distribution"/>
         <mkdir dir="${basedir}/distribution/javadoc"/>
         <copydir src="${basedir}/configurations" dest="${basedir}/distribution/configurations"/>
+        <copydir src="${basedir}/test_dir" dest="${basedir}/distribution"/>
+        <copy file="${basedir}/run.bat" todir="${basedir}/distribution"/>
+        <copy file="${basedir}/run.sh" todir="${basedir}/distribution"/>
+        <copy file="${basedir}/LICENSE.txt" todir="${basedir}/distribution"/>
+        <copy file="${basedir}/NOTICE.txt" todir="${basedir}/distribution"/>
+        <copy file="${basedir}/README.md" todir="${basedir}/distribution"/>
     </target>
 
     <!-- CREATE THE JAVADOC FOR THE PROJECT -->
@@ -45,7 +51,7 @@
              filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
-                <attribute name="Main-Class" value="com/sohail/alam/keywordfinder/KeywordFinderBootstrap"/>
+                <attribute name="Main-Class" value="com/sohail/alam/keywordfinder/KeywordFinder"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${basedir}/out/production/Keyword_Finder">
