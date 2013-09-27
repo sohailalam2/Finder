@@ -1,7 +1,7 @@
 #!/bin/sh
 ### ==============================================================================###
 ##                                                                                 ##
-##                       Keyword Finder Script for Linux based OS's                ##
+##                           Finder Script for Linux based OS's                    ##
 ##                                                                                 ##
 ### ==============================================================================###
 
@@ -96,11 +96,11 @@ if [ "x$JAVA" = "x" ]; then
 fi
 
 # Setup the classpath
-Keyword_Finder="./keyword_finder.jar"
-if [ ! -f "$Keyword_Finder" ]; then
-    die "Missing required file: $Keyword_Finder"
+Finder="./finder.jar"
+if [ ! -f "$Finder" ]; then
+    die "Missing required file: $Finder"
 fi
-AS_BOOT_CLASSPATH="$Keyword_Finder"
+AS_BOOT_CLASSPATH="$Finder"
 
 # Only include tools.jar if someone wants to use the JDK instead.
 # compatible distribution which JAVA_HOME points to
@@ -162,15 +162,15 @@ while true; do
       # Execute the JVM in the foreground
       "$JAVA" $JAVA_OPTS \
          -classpath "$AS_CLASSPATH" \
-         com.sohail.alam.keywordfinder.KeywordFinder"$@"
+         com.sohail.alam.finder.Finder"$@"
       AS_STATUS=$?
    else
       # Execute the JVM in the background
       "$JAVA" $JAVA_OPTS \
          -classpath "$AS_CLASSPATH" \
-        com.sohail.alam.keywordfinder.KeywordFinder&
+        com.sohail.alam.finder.Finder&
       AS_PID=$!
-      # Trap common signals and relay them to the  Keyword Finder process
+      # Trap common signals and relay them to the  Finder process
       trap "kill -HUP  $AS_PID" HUP
       trap "kill -TERM $AS_PID" INT
       trap "kill -QUIT $AS_PID" QUIT
@@ -184,7 +184,7 @@ while true; do
          if [ "${WAIT_STATUS}" -gt 128 ]; then
             SIGNAL=`expr ${WAIT_STATUS} - 128`
             SIGNAL_NAME=`kill -l ${SIGNAL}`
-            echo "***  Keyword Finder process (${AS_PID}) received ${SIGNAL_NAME} signal ***" >&2
+            echo "***  Finder process (${AS_PID}) received ${SIGNAL_NAME} signal ***" >&2
          fi          
       done
       if [ "${WAIT_STATUS}" -lt 127 ]; then
@@ -195,7 +195,7 @@ while true; do
    fi
    
    if [ "$AS_STATUS" -eq 10 ]; then
-      echo "Restarting Keyword Finder..."
+      echo "Restarting Finder..."
    else
       exit $AS_STATUS
    fi

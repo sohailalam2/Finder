@@ -1,10 +1,10 @@
 
-                            The Keyword Finder Project
-                            ==========================
+                            The Finder Project
+                            ==================
 
-Copyright 2013 The Keyword Finder Project
+Copyright 2013 The Finder Project
 
-The Keyword Finder Project licenses this file to you under the Apache License,
+The Finder Project licenses this file to you under the Apache License,
 version 2.0 (the "License"); you may not use this file except in compliance
 with the License. You may obtain a copy of the License at:
 

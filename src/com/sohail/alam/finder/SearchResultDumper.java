@@ -1,7 +1,7 @@
 /*
- * Copyright 2013 The Keyword Finder
+ * Copyright 2013 The Finder
  *
- *  The The Keyword Finder Project licenses this file to you under the Apache License, version 2.0 (the "License");
+ *  The The Finder Project licenses this file to you under the Apache License, version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at:
  *
@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.sohail.alam.keywordfinder;
+package com.sohail.alam.finder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,8 +52,7 @@ public class SearchResultDumper {
 
     public void dumpSearchResult(String result, boolean close) {
         try {
-            searchResultOut.write(result.getBytes());
-            searchResultOut.write("\r\n".getBytes());
+            searchResultOut.write((result + "\r\n").getBytes());
             searchResultOut.flush();
             if (close) {
                 searchResultOut.close();

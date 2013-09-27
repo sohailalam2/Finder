@@ -1,7 +1,7 @@
 <!--
-  ~ Copyright 2013 The Keyword Finder
+  ~ Copyright 2013 The Finder
   ~
-  ~  The The Keyword Finder Project licenses this file to you under the Apache License, version 2.0 (the "License");
+  ~  The The Finder Project licenses this file to you under the Apache License, version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
   ~  You may obtain a copy of the License at:
   ~
@@ -22,7 +22,7 @@
         <deltree dir="${basedir}/distribution"/>
         <mkdir dir="${basedir}/distribution/javadoc"/>
         <copydir src="${basedir}/configurations" dest="${basedir}/distribution/configurations"/>
-        <copydir src="${basedir}/test_dir" dest="${basedir}/distribution"/>
+        <copydir src="${basedir}/test_dir" dest="${basedir}/distribution/test_dir"/>
         <copy file="${basedir}/run.bat" todir="${basedir}/distribution"/>
         <copy file="${basedir}/run.sh" todir="${basedir}/distribution"/>
         <copy file="${basedir}/LICENSE.txt" todir="${basedir}/distribution"/>
@@ -33,28 +33,28 @@
     <!-- CREATE THE JAVADOC FOR THE PROJECT -->
     <target name="create-javadoc">
         <javadoc destdir="${basedir}/distribution/javadoc" author="true" version="true"
-                 use="true" windowtitle="Keyword Finder Javadoc">
+                 use="true" windowtitle="Finder Javadoc">
             <packageset dir="src" defaultexcludes="yes">
             </packageset>
-            <doctitle><![CDATA[<h1>Project Keyword Finder</h1>]]></doctitle>
+            <doctitle><![CDATA[<h1>Project Finder</h1>]]></doctitle>
             <bottom><![CDATA[<i>Copyright &#169; 2013 All Rights Reserved.</i>]]></bottom>
-            <tag name="File-Watch-Service" scope="all" description="Keyword-Finder"/>
-            <link offline="true" href="https://github.com/sohailalam2/Keyword-Finder/"
+            <tag name="Finder" scope="all" description="Finder"/>
+            <link offline="true" href="https://github.com/sohailalam2/Finder/"
                   packagelistLoc="${basedir}/distribution/javadoc"/>
-            <link href="https://github.com/sohailalam2/Keyword-Finder/"/>
+            <link href="https://github.com/sohailalam2/Finder/"/>
         </javadoc>
     </target>
 
     <!-- CREATE THE KEYWORD FINDER JAR -->
     <target name="create_ar" depends="init, create-javadoc">
-        <jar destfile="${basedir}/distribution/keyword_finder.jar"
+        <jar destfile="${basedir}/distribution/finder.jar"
              filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
-                <attribute name="Main-Class" value="com/sohail/alam/keywordfinder/KeywordFinder"/>
+                <attribute name="Main-Class" value="com/sohail/alam/finder/Finder"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="${basedir}/out/production/Keyword_Finder">
+            <fileset dir="${basedir}/out/production/Finder">
             </fileset>
         </jar>
     </target>

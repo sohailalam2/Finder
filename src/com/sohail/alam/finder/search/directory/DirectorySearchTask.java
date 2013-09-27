@@ -1,7 +1,7 @@
 /*
- * Copyright 2013 The Keyword Finder
+ * Copyright 2013 The Finder
  *
- *  The The Keyword Finder Project licenses this file to you under the Apache License, version 2.0 (the "License");
+ *  The The Finder Project licenses this file to you under the Apache License, version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at:
  *
@@ -14,12 +14,12 @@
  *  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.sohail.alam.keywordfinder.search.directory;
+package com.sohail.alam.finder.search.directory;
 
 import java.io.*;
 
-import static com.sohail.alam.keywordfinder.PropertiesLoader.PROP;
-import static com.sohail.alam.keywordfinder.SearchResultDumper.DUMPER;
+import static com.sohail.alam.finder.PropertiesLoader.PROP;
+import static com.sohail.alam.finder.SearchResultDumper.DUMPER;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,31 +38,36 @@ public class DirectorySearchTask implements Runnable {
     public void run() {
         BufferedReader reader;
         String currentLine;
-        String msgWithOutStats = "KEYWORD FOUND IN FILE: " + file.getAbsoluteFile();
+        long count = 0;
+        boolean found = false;
+        String foundMsg = "\nKEYWORD FOUND IN FILE: " + file.getAbsoluteFile();
         try {
             reader = new BufferedReader(new FileReader(file));
-            long count = 0;
             while ((currentLine = reader.readLine()) != null) {
-                if (currentLine.contains(PROP.KEYWORD_TO_SEARCH)) {
-                    if (PROP.enableStatistics) {
+                if (currentLine.contains(PROP.WHAT_TO_SEARCH)) {
+                    found = true;
+                    if (PROP.ENABLE_STATISTICS) {
                         count++;
                     } else {
-                        System.out.println(msgWithOutStats);
-                        DUMPER.dumpSearchResult(msgWithOutStats, false);
                         break;
                     }
                 }
             }
             // Print the statistics
-            if (PROP.enableStatistics) {
-                String countMsg = String.format("%-15s", "COUNTS: " + count);
-                System.out.println(countMsg + msgWithOutStats);
-                DUMPER.dumpSearchResult(countMsg + msgWithOutStats, false);
+            if (found) {
+                if (PROP.ENABLE_STATISTICS) {
+                    String countMsg = String.format("%-15s", "COUNTS: " + count);
+                    System.out.println(countMsg + foundMsg);
+                    DUMPER.dumpSearchResult(countMsg + foundMsg, false);
+                } else {
+                    System.out.println(foundMsg);
+                    DUMPER.dumpSearchResult(foundMsg, false);
+                }
             }
 
             // Shut down if all tasks were completed
             if (DirectorySearch.DIR_SEARCH.FILE_COUNTER.decrementAndGet() == 0) {
-                String completedMsg = "Directory Search Task Completed Successfully!";
+                String completedMsg = "\n\nDirectory Search Task Completed Successfully!";
                 System.out.println(completedMsg);
                 DUMPER.dumpSearchResult(completedMsg, true);
                 DirectorySearch.DIR_SEARCH.TASK_COUNTER_SERVICE.shutdown();
