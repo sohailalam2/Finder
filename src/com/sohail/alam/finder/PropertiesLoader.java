@@ -36,6 +36,7 @@ public class PropertiesLoader {
     public File PATH_TO_SEARCH;
     public boolean IS_DIRECTORY;
     public boolean ENABLE_DEEP_SEARCH;
+    public boolean ENABLE_OCCURRENCE_COUNTER;
     public boolean ENABLE_STATISTICS;
     public int STATISTICS_UPDATE_PERIOD; // TODO: add CLI support
     public boolean ENABLE_PATTERN_SEARCH;
@@ -58,6 +59,7 @@ public class PropertiesLoader {
             loadPath(properties.getProperty("PATH_TO_SEARCH").trim());
             // Others
             loadEnableDeepSearch(properties.getProperty("ENABLE_DEEP_SEARCH", "true").trim());
+            loadEnableOccurrenceCount(properties.getProperty("ENABLE_OCCURRENCE_COUNTER", "false").trim());
             loadEnableStatistics(properties.getProperty("ENABLE_STATISTICS", "false").trim());
             loadStatisticsUpdatePeriod(properties.getProperty("STATISTICS_UPDATE_PERIOD", "10").trim());
             loadEnablePatternSearch(properties.getProperty("ENABLE_PATTERN_SEARCH", "false").trim());
@@ -110,6 +112,13 @@ public class PropertiesLoader {
     public void loadEnableDeepSearch(String enableDeepSearch) {
         ENABLE_DEEP_SEARCH = Boolean.parseBoolean(enableDeepSearch);
         final String msg = "\nIs Deep Search Enabled: " + ENABLE_DEEP_SEARCH;
+        System.out.println(msg);
+        DUMPER.dumpSearchResult(msg, false);
+    }
+
+    public void loadEnableOccurrenceCount(String count) {
+        ENABLE_OCCURRENCE_COUNTER = Boolean.parseBoolean(count);
+        final String msg = "\nIs Occurrence Count Enabled: " + ENABLE_OCCURRENCE_COUNTER;
         System.out.println(msg);
         DUMPER.dumpSearchResult(msg, false);
     }

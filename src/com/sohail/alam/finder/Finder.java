@@ -100,6 +100,9 @@ public class Finder {
                         case D: // ENABLE_DEEP_SEARCH
                             PROP.loadEnableDeepSearch(value);
                             break;
+                        case O: // ENABLE_OCCURRENCE_COUNTER
+                            PROP.loadEnableOccurrenceCount(value);
+                            break;
                         case STATS: // ENABLE_STATISTICS
                             PROP.loadEnableStatistics(value);
                             break;
@@ -133,6 +136,7 @@ public class Finder {
         createHelp(builder, "-s", "search", "Anything that you wish to search for");
         createHelp(builder, "-p", "path", "The path where you want to search, can be a directory or a file");
         createHelp(builder, "-d", "true/false", "Enabling deep search will search all nested directories recursively");
+        createHelp(builder, "-o", "true/false", "Enabling will search for number of occurrences of the match in the given file. Disable to improve performance");
         createHelp(builder, "-stats", "true/false", "Enabling Statistics will keep the search on beyond first match and hence calculate the total occurrences");
         createHelp(builder, "-pat", "true/false", "Enable Regular Expression Search, the -s parameter can hold any valid RegEx");
         createHelp(builder, "-flag", "integer", "Additional RegEx options: 1 => UNIX_LINES, 2 => CASE_INSENSITIVE, 4 => COMMENTS, 8 => MULTILINE");
@@ -146,6 +150,7 @@ public class Finder {
         S, // WHAT_TO_SEARCH
         P, // PATH_TO_SEARCH
         D, // ENABLE_DEEP_SEARCH
+        O, // ENABLE_OCCURRENCE_COUNTER
         STATS, // ENABLE_STATISTICS
         PAT, // ENABLE_PATTERN_SEARCH
         FLAG; // PATTERN_MATCH_FLAG

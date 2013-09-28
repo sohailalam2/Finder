@@ -47,7 +47,7 @@ public class DirectorySearchTask implements Runnable {
             while ((currentLine = reader.readLine()) != null) {
                 if (currentLine.contains(PROP.WHAT_TO_SEARCH)) {
                     found = true;
-                    if (PROP.ENABLE_STATISTICS) {
+                    if (PROP.ENABLE_OCCURRENCE_COUNTER) {
                         count++;
                     } else {
                         break;
@@ -57,7 +57,10 @@ public class DirectorySearchTask implements Runnable {
             // Print the statistics
             if (found) {
                 if (PROP.ENABLE_STATISTICS) {
-                    String countMsg = String.format("%-15s", "COUNTS: " + count);
+                    String countMsg = "";
+                    if (PROP.ENABLE_OCCURRENCE_COUNTER) {
+                        countMsg = String.format("%-15s", "COUNTS: " + count);
+                    }
                     System.out.println(countMsg + foundMsg);
                     DUMPER.dumpSearchResult(countMsg + foundMsg, false);
                 } else {

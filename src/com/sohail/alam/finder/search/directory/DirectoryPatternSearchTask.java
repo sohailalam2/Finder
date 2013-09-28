@@ -52,7 +52,7 @@ public class DirectoryPatternSearchTask implements Runnable {
                 patternMatcher = pattern.matcher(currentLine);
                 if (patternMatcher.find()) {
                     found = true;
-                    if (PROP.ENABLE_STATISTICS) {
+                    if (PROP.ENABLE_OCCURRENCE_COUNTER) {
                         count++;
                     } else {
                         break;
@@ -62,7 +62,10 @@ public class DirectoryPatternSearchTask implements Runnable {
             // Print the statistics
             if (found) {
                 if (PROP.ENABLE_STATISTICS) {
-                    String countMsg = String.format("%-15s", "COUNTS: " + count);
+                    String countMsg = "";
+                    if (PROP.ENABLE_OCCURRENCE_COUNTER) {
+                        countMsg = String.format("%-15s", "COUNTS: " + count);
+                    }
                     System.out.println(countMsg + foundMsg);
                     DUMPER.dumpSearchResult(countMsg + foundMsg, false);
                 } else {
