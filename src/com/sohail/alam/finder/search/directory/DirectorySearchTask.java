@@ -20,6 +20,7 @@ import java.io.*;
 
 import static com.sohail.alam.finder.PropertiesLoader.PROP;
 import static com.sohail.alam.finder.SearchResultDumper.DUMPER;
+import static com.sohail.alam.finder.search.directory.DirectorySearch.DIR_SEARCH;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,7 +41,7 @@ public class DirectorySearchTask implements Runnable {
         String currentLine;
         long count = 0;
         boolean found = false;
-        String foundMsg = "\nKEYWORD FOUND IN FILE: " + file.getAbsoluteFile();
+        String foundMsg = "KEYWORD FOUND IN FILE: " + file.getAbsoluteFile() + "\n";
         try {
             reader = new BufferedReader(new FileReader(file));
             while ((currentLine = reader.readLine()) != null) {
@@ -66,12 +67,12 @@ public class DirectorySearchTask implements Runnable {
             }
 
             // Shut down if all tasks were completed
-            if (DirectorySearch.DIR_SEARCH.FILE_COUNTER.decrementAndGet() == 0) {
+            if (DIR_SEARCH.FILES_COMPLETED.incrementAndGet() == DIR_SEARCH.FILES_FOUND_TO_SEARCH.get()) {
                 String completedMsg = "\n\nDirectory Search Task Completed Successfully!";
                 System.out.println(completedMsg);
                 DUMPER.dumpSearchResult(completedMsg, true);
-                DirectorySearch.DIR_SEARCH.TASK_COUNTER_SERVICE.shutdown();
-                DirectorySearch.DIR_SEARCH.SERVICE.shutdown();
+                DIR_SEARCH.TASK_COUNTER_SERVICE.shutdown();
+                DIR_SEARCH.SERVICE.shutdown();
             }
         } catch (FileNotFoundException e) {
             System.err.println(e.getMessage());

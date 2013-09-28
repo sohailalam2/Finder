@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import static com.sohail.alam.finder.PropertiesLoader.PROP;
 import static com.sohail.alam.finder.SearchResultDumper.DUMPER;
+import static com.sohail.alam.finder.search.directory.DirectorySearch.DIR_SEARCH;
 
 /**
  * User: Sohail Alam
@@ -44,7 +45,7 @@ public class DirectoryPatternSearchTask implements Runnable {
         String currentLine;
         long count = 0;
         boolean found = false;
-        String foundMsg = "\nPATTERN FOUND IN FILE: " + file.getAbsoluteFile();
+        String foundMsg = "PATTERN FOUND IN FILE: " + file.getAbsoluteFile() + "\n";
         try {
             reader = new BufferedReader(new FileReader(file));
             while ((currentLine = reader.readLine()) != null) {
@@ -71,7 +72,7 @@ public class DirectoryPatternSearchTask implements Runnable {
             }
 
             // Shut down if all tasks were completed
-            if (DirectorySearch.DIR_SEARCH.FILE_COUNTER.decrementAndGet() == 0) {
+            if (DIR_SEARCH.FILES_COMPLETED.incrementAndGet() == DIR_SEARCH.FILES_FOUND_TO_SEARCH.get()) {
                 String completedMsg = "\n\nDirectory Search Task Completed Successfully!";
                 System.out.println(completedMsg);
                 DUMPER.dumpSearchResult(completedMsg, true);

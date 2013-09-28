@@ -18,8 +18,9 @@ package com.sohail.alam.finder;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import static com.sohail.alam.finder.SearchResultDumper.DUMPER;
 
@@ -36,8 +37,12 @@ public class PropertiesLoader {
     public boolean IS_DIRECTORY;
     public boolean ENABLE_DEEP_SEARCH;
     public boolean ENABLE_STATISTICS;
+    public int STATISTICS_UPDATE_PERIOD; // TODO: add CLI support
     public boolean ENABLE_PATTERN_SEARCH;
     public int PATTERN_MATCH_FLAG = 1;
+    // TODO: Add filtering support
+    public boolean ENABLE_FILE_FILTER; // TODO: add CLI support
+    public ArrayList<String> FILTER_FILE_TYPE; // TODO: add CLI support
 
     private PropertiesLoader() {
 
@@ -54,10 +59,13 @@ public class PropertiesLoader {
             // Others
             loadEnableDeepSearch(properties.getProperty("ENABLE_DEEP_SEARCH", "true").trim());
             loadEnableStatistics(properties.getProperty("ENABLE_STATISTICS", "false").trim());
+            loadStatisticsUpdatePeriod(properties.getProperty("STATISTICS_UPDATE_PERIOD", "10").trim());
             loadEnablePatternSearch(properties.getProperty("ENABLE_PATTERN_SEARCH", "false").trim());
             loadPatternSearchFlag(properties.getProperty("PATTERN_MATCH_FLAG", "1").trim());
+            loadEnableFileFilter(properties.getProperty("ENABLE_FILE_FILTER", "false").trim());
+            loadFilterFileType(properties.getProperty("FILTER_FILE_TYPE", "txt").trim());
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Failed to load properties...");
             System.exit(-1);
         }
@@ -113,6 +121,16 @@ public class PropertiesLoader {
         DUMPER.dumpSearchResult(msg, false);
     }
 
+    public void loadStatisticsUpdatePeriod(String updatePeriod) {
+        if (ENABLE_STATISTICS) {
+            try {
+                STATISTICS_UPDATE_PERIOD = Integer.parseInt(updatePeriod);
+            } catch (NumberFormatException e) {
+                System.err.println("The Statistics Update Period MUST be an integer value");
+            }
+        }
+    }
+
     public void loadEnablePatternSearch(String enablePatternSearch) {
         ENABLE_PATTERN_SEARCH = Boolean.parseBoolean(enablePatternSearch);
         final String msg = "\nIs Pattern Search Enabled: " + ENABLE_PATTERN_SEARCH;
@@ -121,33 +139,55 @@ public class PropertiesLoader {
     }
 
     public void loadPatternSearchFlag(String flag) {
-        try {
-            if (flag != null && !flag.isEmpty()) {
-                PATTERN_MATCH_FLAG = Integer.parseInt(flag);
-                switch (PATTERN_MATCH_FLAG) {
-                    case 1: // UNIX_LINES
-                    case 2: // CASE_INSENSITIVE
-                    case 4: // COMMENTS
-                    case 8: // MULTILINE
-                    case 16: // LITERAL
-                    case 32: // DOTALL
-                    case 64: // UNICODE_CASE
-                    case 128: // CANON_EQ
-                        final String msg = "\nPattern Flag Loaded: " + PATTERN_MATCH_FLAG;
-                        System.out.println(msg);
-                        DUMPER.dumpSearchResult(msg, false);
-                        break;
-                    default:
-                        System.err.println("PATTERN_MATCH_FLAG must have an integer value among one of the given values");
-                        System.exit(-1);
-                        break;
+        if (ENABLE_PATTERN_SEARCH) {
+            try {
+                if (flag != null && !flag.isEmpty()) {
+                    PATTERN_MATCH_FLAG = Integer.parseInt(flag);
+                    switch (PATTERN_MATCH_FLAG) {
+                        case 1: // UNIX_LINES
+                        case 2: // CASE_INSENSITIVE
+                        case 4: // COMMENTS
+                        case 8: // MULTILINE
+                        case 16: // LITERAL
+                        case 32: // DOTALL
+                        case 64: // UNICODE_CASE
+                        case 128: // CANON_EQ
+                            final String msg = "\nPattern Flag Loaded: " + PATTERN_MATCH_FLAG;
+                            System.out.println(msg);
+                            DUMPER.dumpSearchResult(msg, false);
+                            break;
+                        default:
+                            System.err.println("PATTERN_MATCH_FLAG must have an integer value among one of the given values");
+                            System.exit(-1);
+                            break;
+                    }
+                } else {
+                    PATTERN_MATCH_FLAG = 1;
                 }
-            } else {
-                PATTERN_MATCH_FLAG = 1;
+            } catch (NumberFormatException e) {
+                System.err.println("PATTERN_MATCH_FLAG must have an integer value among one of the given values");
+                System.exit(-1);
             }
-        } catch (NumberFormatException e) {
-            System.err.println("PATTERN_MATCH_FLAG must have an integer value among one of the given values");
-            System.exit(-1);
+        }
+    }
+
+    public void loadEnableFileFilter(String enableFileFilter) {
+        ENABLE_FILE_FILTER = Boolean.parseBoolean(enableFileFilter);
+        final String msg = "\nIs File Filter Enabled: " + ENABLE_FILE_FILTER;
+        System.out.println(msg);
+        DUMPER.dumpSearchResult(msg, false);
+    }
+
+    public void loadFilterFileType(String filterFileType) {
+        if (ENABLE_FILE_FILTER) {
+            FILTER_FILE_TYPE = new ArrayList<String>();
+            StringTokenizer tokenizer = new StringTokenizer(filterFileType, ",");
+            while (tokenizer.hasMoreElements()) {
+                FILTER_FILE_TYPE.add(tokenizer.nextToken().trim());
+            }
+            final String msg = "\nFiltering File Types: " + filterFileType;
+            System.out.println(msg);
+            DUMPER.dumpSearchResult(msg, false);
         }
     }
 }

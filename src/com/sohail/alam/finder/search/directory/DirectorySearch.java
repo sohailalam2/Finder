@@ -31,12 +31,14 @@ import static com.sohail.alam.finder.SearchResultDumper.DUMPER;
  */
 public class DirectorySearch {
     public static final DirectorySearch DIR_SEARCH = new DirectorySearch();
-    protected final AtomicLong FILE_COUNTER;
+    protected final AtomicLong FILES_FOUND_TO_SEARCH;
+    protected final AtomicLong FILES_COMPLETED;
     protected final ExecutorService SERVICE;
     protected final ScheduledExecutorService TASK_COUNTER_SERVICE;
 
     private DirectorySearch() {
-        FILE_COUNTER = new AtomicLong(0);
+        FILES_FOUND_TO_SEARCH = new AtomicLong(0);
+        FILES_COMPLETED = new AtomicLong(0);
         SERVICE = Executors.newFixedThreadPool(2 * Runtime.getRuntime().availableProcessors());
         TASK_COUNTER_SERVICE = new ScheduledThreadPoolExecutor(1);
 
@@ -46,15 +48,22 @@ public class DirectorySearch {
         TASK_COUNTER_SERVICE.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                System.out.println("\nFiles Remaining: " + DirectorySearch.DIR_SEARCH.FILE_COUNTER.get());
+                StringBuilder builder = new StringBuilder();
+                builder.append("\n")
+                        .append("Total Files Found for Search: ").append(String.format("%-10s", FILES_FOUND_TO_SEARCH.get()))
+                        .append("  ")
+                        .append("Total Files Completed: ").append(String.format("%-10s", FILES_COMPLETED.get()))
+                        .append("\n");
+
+                System.out.println(builder.toString());
             }
-        }, 0, 10, TimeUnit.SECONDS);
+        }, 0, PROP.STATISTICS_UPDATE_PERIOD, TimeUnit.SECONDS);
     }
 
     private void addTaskForPatternSearch(File[] allFiles) {
         for (File file : allFiles) {
             if (file.isFile()) {
-                DirectorySearch.DIR_SEARCH.FILE_COUNTER.incrementAndGet();
+                FILES_FOUND_TO_SEARCH.incrementAndGet();
                 SERVICE.execute(new DirectoryPatternSearchTask(file));
             } else {
                 if (PROP.ENABLE_DEEP_SEARCH) {
@@ -67,7 +76,7 @@ public class DirectorySearch {
     private void addTaskForNormalSearch(File[] allFiles) {
         for (File file : allFiles) {
             if (file.isFile()) {
-                DirectorySearch.DIR_SEARCH.FILE_COUNTER.incrementAndGet();
+                FILES_FOUND_TO_SEARCH.incrementAndGet();
                 SERVICE.execute(new DirectorySearchTask(file));
             } else {
                 if (PROP.ENABLE_DEEP_SEARCH) {
@@ -80,15 +89,14 @@ public class DirectorySearch {
     public void start() {
         File[] allFiles = PROP.PATH_TO_SEARCH.listFiles();
         if (allFiles != null) {
+            if (PROP.ENABLE_STATISTICS) {
+                startTaskCounterDisplay();
+            }
             if (PROP.ENABLE_PATTERN_SEARCH) {
                 addTaskForPatternSearch(allFiles);
             } else {
                 addTaskForNormalSearch(allFiles);
             }
-            String msg = "\nTotal Number of files to search => " + DirectorySearch.DIR_SEARCH.FILE_COUNTER.get();
-            System.out.println(msg);
-            DUMPER.dumpSearchResult(msg, false);
-            startTaskCounterDisplay();
         } else {
             String msg = "\nThere are no files in this directory! Exiting Search";
             System.out.println(msg);

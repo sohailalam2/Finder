@@ -37,6 +37,8 @@ public class Finder {
 
     public static void main(String[] args) throws IOException {
 
+        System.err.println(showWelcomeScreen());
+
         int argsLength = args.length;
 
         // If no command line arguments were provided then load from properties file
@@ -150,5 +152,42 @@ public class Finder {
 
         private CliOptions() {
         }
+    }
+
+    private static String showWelcomeScreen() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("                                                                                                        \n")
+                .append(" /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$\n")
+                .append("|______/|______/|______/|______/|______/|______/|______/|______/|______/|______/|______/|______/|______/\n")
+                .append("                                                                                                        \n")
+                .append("                                                                                                        \n")
+                .append("                         /$$$$$$$$ /$$                 /$$                                              \n")
+                .append("                        | $$_____/|__/                | $$                                              \n")
+                .append("                        | $$       /$$ /$$$$$$$   /$$$$$$$  /$$$$$$   /$$$$$$                           \n")
+                .append("                        | $$$$$   | $$| $$__  $$ /$$__  $$ /$$__  $$ /$$__  $$                          \n")
+                .append("                        | $$__/   | $$| $$  \\ $$| $$  | $$| $$$$$$$$| $$  \\__/                          \n")
+                .append("                        | $$      | $$| $$  | $$| $$  | $$| $$_____/| $$                                \n")
+                .append("                        | $$      | $$| $$  | $$|  $$$$$$$|  $$$$$$$| $$                                \n")
+                .append("                        |__/      |__/|__/  |__/ \\_______/ \\_______/|__/                                \n")
+                .append("                                                                                                        \n")
+                .append(developer())
+                .append("                                                                                                        \n")
+                .append("                                                                                                        \n")
+                .append("                                                                                                        \n")
+                .append(" /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$ /$$$$$$\n")
+                .append("|______/|______/|______/|______/|______/|______/|______/|______/|______/|______/|______/|______/|______/\n")
+                .append("                                                                                                        \n")
+                .append("                                                                                                        ");
+
+        return builder.toString();
+    }
+
+    private static String developer() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("                              _     o  __                   _          \n")
+                .append("                             |_) \\/   (_  _ |_  _  o  |    |_| |  _ __ \n")
+                .append("                             |_) /  o __)(_)| |(_| |  |    | | | (_||||");
+
+        return builder.toString();
     }
 }
