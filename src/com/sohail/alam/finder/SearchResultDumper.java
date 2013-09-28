@@ -56,7 +56,7 @@ public class SearchResultDumper {
             searchResultOut.flush();
             if (close) {
                 searchResultOut.close();
-                System.out.println("Search Result has been dumped successfully to => " + SEARCH_RESULT_FILE.getAbsoluteFile());
+                System.out.println("\nSearch Result has been dumped successfully to => " + SEARCH_RESULT_FILE.getAbsoluteFile());
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());

@@ -66,7 +66,7 @@ public class PropertiesLoader {
             loadFilterFileType(properties.getProperty("FILTER_FILE_TYPE", "txt").trim());
 
         } catch (Exception e) {
-            System.err.println("Failed to load properties...");
+            System.err.println("\nFailed to load properties...");
             System.exit(-1);
         }
     }
@@ -78,7 +78,7 @@ public class PropertiesLoader {
             System.out.println(msg);
             DUMPER.dumpSearchResult(msg, false);
         } else {
-            System.err.println("THE KEYWORD MUST NOT BE EMPTY");
+            System.err.println("\nTHE KEYWORD MUST NOT BE EMPTY");
             Finder.showHelp();
             System.exit(-1);
         }
@@ -96,12 +96,12 @@ public class PropertiesLoader {
                 DUMPER.dumpSearchResult(pathMsg, false);
                 DUMPER.dumpSearchResult(dirMsg, false);
             } else {
-                final String pathNotExistsMsg = "The Path Does NOT Exists: " + PATH_TO_SEARCH.getAbsoluteFile();
+                final String pathNotExistsMsg = "\nThe Path Does NOT Exists: " + PATH_TO_SEARCH.getAbsoluteFile();
                 System.err.println(pathNotExistsMsg);
                 DUMPER.dumpSearchResult(pathNotExistsMsg, false);
             }
         } else {
-            System.err.println("THE PATH MUST NOT BE EMPTY");
+            System.err.println("\nTHE PATH MUST NOT BE EMPTY");
             Finder.showHelp();
             System.exit(-1);
         }
@@ -125,8 +125,9 @@ public class PropertiesLoader {
         if (ENABLE_STATISTICS) {
             try {
                 STATISTICS_UPDATE_PERIOD = Integer.parseInt(updatePeriod);
+                System.out.println("\nStatistics Update Period (in sec): " + STATISTICS_UPDATE_PERIOD);
             } catch (NumberFormatException e) {
-                System.err.println("The Statistics Update Period MUST be an integer value");
+                System.err.println("\nThe Statistics Update Period MUST be an integer value");
             }
         }
     }
@@ -157,7 +158,7 @@ public class PropertiesLoader {
                             DUMPER.dumpSearchResult(msg, false);
                             break;
                         default:
-                            System.err.println("PATTERN_MATCH_FLAG must have an integer value among one of the given values");
+                            System.err.println("\nPATTERN_MATCH_FLAG must have an integer value among one of the given values");
                             System.exit(-1);
                             break;
                     }
@@ -165,7 +166,7 @@ public class PropertiesLoader {
                     PATTERN_MATCH_FLAG = 1;
                 }
             } catch (NumberFormatException e) {
-                System.err.println("PATTERN_MATCH_FLAG must have an integer value among one of the given values");
+                System.err.println("\nPATTERN_MATCH_FLAG must have an integer value among one of the given values");
                 System.exit(-1);
             }
         }
